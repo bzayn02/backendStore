@@ -1,0 +1,13 @@
+@rootAPI = http://localhost:8001
+
+
+############ Categories ########
+
+### Fetching all categories
+GET {{rootAPI}}/categories
+
+
+
+
+############# Products ########
+GET {{rootAPI}}/products

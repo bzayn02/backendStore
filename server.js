@@ -15,10 +15,25 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
+// ========= Routers ==========
+import categoryRouter from './src/routers/categoryRouter.js';
+app.use('/', categoryRouter);
+import productRouter from './src/routers/productRouter.js';
+app.use('/', productRouter);
+
 app.get('/', (req, res) => {
   res.json({
     status: 'success',
     message: 'Server is running okay!',
+  });
+});
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  const code = error.statusCode || 500;
+  res.status(code).json({
+    status: 'error',
+    message: error.message,
   });
 });
 
