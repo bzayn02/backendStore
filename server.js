@@ -8,9 +8,11 @@ const PORT = process.env.PORT || 8001;
 
 // ======== Middlewares =========
 import morgan from 'morgan';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import { mongoConnect } from './src/config/mongoConfig.js';
 mongoConnect();
+app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());

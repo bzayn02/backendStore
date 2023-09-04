@@ -11,3 +11,7 @@ GET {{rootAPI}}/categories
 
 ############# Products ########
 GET {{rootAPI}}/products
+
+
+### Fetching all products based on category ID
+GET {{rootAPI}}/categories/summer-clothings/64d823f2c73b765ae5b018e5
