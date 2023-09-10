@@ -7,3 +7,7 @@ export const getAllProducts = () => {
 export const getProductsByCategoryId = (parentCat = categoryId) => {
   return ProductSchema.find({ parentCat });
 };
+
+export const getProductBySlug = (slug) => {
+  return ProductSchema.find({ slug });
+};
