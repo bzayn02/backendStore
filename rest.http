@@ -14,8 +14,24 @@ GET {{rootAPI}}/products
 
 
 ### Fetching all products based on category ID
-GET {{rootAPI}}/categories/summer-clothings/64d823f2c73b765ae5b018e5
+GET {{rootAPI}}/products/categories/summer-clothings/64d823f2c73b765ae5b018e5
 
 
 ### Find product by slug
-GET {{rootAPI}}/product/joggers
+GET {{rootAPI}}/products/product/albany-casual-shirt
+
+
+#=========== Admin API
+
+### Create new user
+POST {{rootAPI}}/user
+Content-Type: application/json
+
+{
+    "fname":"Bijay",
+     "lname":"Nagarkoti",
+     "phone":"0410584026",
+     "email":"nagardafdfkoti@gmail.com",
+     "password":"aaaaaaaa",
+     "profileImg":"afdafjd.jpg"
+}

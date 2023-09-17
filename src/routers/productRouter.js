@@ -7,7 +7,7 @@ import {
 const router = express.Router();
 
 // Get all products
-router.get('/products', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const result = await getAllProducts();
     console.log('products', result);

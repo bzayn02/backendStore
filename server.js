@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
+import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 8001;
@@ -17,11 +18,17 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
+const __dirname = path.resolve;
+// converting public folder to static serving folder
+app.use(express.static(path.join(__dirname + '/public')));
+
 // ========= Routers ==========
+import userRouter from './src/routers/userRouter.js';
+app.use('/user', userRouter);
 import categoryRouter from './src/routers/categoryRouter.js';
-app.use('/', categoryRouter);
+app.use('/categories', categoryRouter);
 import productRouter from './src/routers/productRouter.js';
-app.use('/', productRouter);
+app.use('/products', productRouter);
 
 app.get('/', (req, res) => {
   res.json({
