@@ -39,6 +39,7 @@ export const newUserValidation = (req, res, next) => {
     next(error);
   }
 };
+
 export const updateAdminValidation = (req, res, next) => {
   try {
     // Define schema
@@ -64,6 +65,7 @@ export const updateAdminValidation = (req, res, next) => {
     next(error);
   }
 };
+
 export const newUserVerificationValidation = (req, res, next) => {
   try {
     // Define schema

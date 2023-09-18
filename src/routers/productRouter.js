@@ -10,7 +10,6 @@ const router = express.Router();
 router.get('/', async (req, res, next) => {
   try {
     const result = await getAllProducts();
-    console.log('products', result);
     res.json({
       status: 'success',
       message: 'Here are all the categories...',

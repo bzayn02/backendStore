@@ -1,17 +1,26 @@
 import express from 'express';
 
 import multer from 'multer';
-import { insertUser, updateVerifyUser } from '../model/user/userModel.js';
 import {
+  getUserByEmail,
+  insertUser,
+  updateUserById,
+  updateVerifyUser,
+} from '../model/user/userModel.js';
+import {
+  loginValidation,
   newUserValidation,
   newUserVerificationValidation,
 } from '../middleware/joiValidation.js';
-import { hashPassword } from '../helpers/bcrypt.js';
+import { comparePassword, hashPassword } from '../helpers/bcrypt.js';
 import { v4 as uuidv4 } from 'uuid';
 import {
   accountVerificationEmail,
   accountVerifiedNotification,
 } from '../helpers/nodemailer.js';
+import { createAccessJWT, createRefreshJWT } from '../helpers/jwt.js';
+import { auth, refreshAuth } from '../middleware/authMiddleware.js';
+import { deleteSession } from '../model/session/sessionModel.js';
 
 const router = express.Router();
 
@@ -35,6 +44,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// ================ Get user details
+router.get('/', auth, (req, res, next) => {
+  try {
+    req.userInfo.password = undefined;
+    res.json({
+      status: 'success',
+      message: 'Here is the user info.',
+      user: req.userInfo,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ================ User Registration
 router.post(
   '/',
   upload.single('profileImg'),
@@ -81,6 +105,7 @@ router.post(
   }
 );
 
+// ================ Account Verification
 router.post(
   '/user-verification',
   newUserVerificationValidation,
@@ -88,7 +113,11 @@ router.post(
     try {
       const { email, code } = req.body;
       const filter = { email, verificationCode: code };
-      const updateObj = { isVerified: true, verificationCode: '' };
+      const updateObj = {
+        isVerified: true,
+        verificationCode: '',
+        status: 'active',
+      };
       const result = await updateVerifyUser(filter, updateObj);
 
       if (result?._id) {
@@ -107,5 +136,51 @@ router.post(
     }
   }
 );
+
+// =============== Sign in
+router.post('/sign-in', loginValidation, async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await getUserByEmail(email);
+    if (user?._id) {
+      const isMatched = comparePassword(password, user.password);
+      if (isMatched) {
+        const accessJWT = await createAccessJWT(email);
+        const refreshJWT = await createRefreshJWT(email);
+        return res.json({
+          status: 'success',
+          message: 'Signed in successfully.',
+          token: { accessJWT, refreshJWT },
+        });
+      }
+    }
+    res.json({
+      status: 'error',
+      message: 'Invalid login details.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Return refresh JWT
+router.get('/get-accessjwt', refreshAuth);
+
+// User Logout
+router.post('/signout', async (req, res, next) => {
+  try {
+    const { accessJWT, refreshJWT, _id } = req.body;
+    accessJWT && deleteSession(accessJWT);
+    if (refreshJWT && _id) {
+      await updateUserById({ _id, refreshJWT: '' });
+    }
+
+    res.json({
+      status: 'success',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;

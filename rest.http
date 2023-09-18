@@ -35,3 +35,14 @@ Content-Type: application/json
      "password":"aaaaaaaa",
      "profileImg":"afdafjd.jpg"
 }
+
+
+### Login in
+POST {{rootAPI}}/user/sign-in
+Content-Type: application/json
+
+{
+    "email":"bnag@gmail.com",
+    "password":"aA111111"
+}
+
