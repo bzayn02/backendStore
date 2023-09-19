@@ -18,7 +18,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-const __dirname = path.resolve;
+const __dirname = path.resolve();
 // converting public folder to static serving folder
 app.use(express.static(path.join(__dirname + '/public')));
 

@@ -75,6 +75,12 @@ router.post(
       const result = await insertUser(req.body);
       console.log(result);
       if (result?._id) {
+        res.json({
+          status: 'success',
+          message:
+            'Please check your email and follow instructions to activate the account.',
+          result,
+        });
         const verificationCode = result.verificationCode;
         const email = result.email;
         const link = `${process.env.WEB_DOMAIN}/user-verification?code=${verificationCode}&email=${result.email}`;
@@ -83,14 +89,9 @@ router.post(
           email,
           link,
         });
-        res.json({
-          status: 'success',
-          message:
-            'Please check your email and follow instructions to activate the account.',
-          result,
-        });
+        return;
       }
-      return res.json({
+      res.json({
         status: 'error',
         message: 'Unable to create account. Please try again later.',
       });
