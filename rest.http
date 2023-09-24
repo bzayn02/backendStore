@@ -46,3 +46,7 @@ Content-Type: application/json
     "password":"aA111111"
 }
 
+
+### ======== Payment options =======
+GET {{rootAPI}}/payment-options 
+

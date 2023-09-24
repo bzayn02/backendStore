@@ -29,6 +29,8 @@ import categoryRouter from './src/routers/categoryRouter.js';
 app.use('/categories', categoryRouter);
 import productRouter from './src/routers/productRouter.js';
 app.use('/products', productRouter);
+import paymentRouter from './src/routers/paymentRouter.js';
+app.use('/payment-options', paymentRouter);
 
 app.get('/', (req, res) => {
   res.json({
